@@ -18,6 +18,7 @@ var urlsToCache = [
   "/js/db.js",
   "/js/sw-registration.js",
   "/js/team-detail.js",
+  "/js/notification.js",
   "/lib/idb.js",
   "/assets/1.jpg",
   "/assets/2.jpg",
@@ -85,5 +86,47 @@ self.addEventListener("activate", function (event) {
         })
       );
     })
+  );
+});
+
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+
+  if (!event.action) {
+    console.log("notificationclick");
+    return;
+  }
+
+  switch (event.action) {
+    case "yes-action":
+      console.log("yes clicked");
+      break;
+    case "no-action":
+      console.log("no clicked");
+      break;
+    default:
+      console.log("action not found:" + event.action);
+      break;
+  }
+});
+
+self.addEventListener('push', (event) => {
+  let body;
+  if (event.data) {
+    body = event.data.text();
+  } else {
+    body = 'Push message no payload';
+  }
+  let options = {
+    body: body,
+    icon: 'assets/icon192x192.png',
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1
+    }
+  };
+  event.waitUntil(
+    self.registration.showNotification('Push Notification', options)
   );
 });

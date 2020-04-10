@@ -1,14 +1,16 @@
+//Service worker registration
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
     navigator.serviceWorker
       .register("/service-worker.js")
       .then(function () {
-        console.log("pendaftaran service worker berhasil");
+        console.log("service worker registration success");
       })
       .catch(function () {
-        console.log("pendaftaran service worker gagal");
+        console.log("service worker rehistration failed");
       });
   });
 } else {
-  console.log("service worker belum didukung browser ini");
+  console.log("browser not support service worker");
 }
+
