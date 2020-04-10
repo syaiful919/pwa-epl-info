@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load page content
   const loadPage = page => {
-    console.log(">>> page", page)
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4) {
@@ -61,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
           } else if (page == "teams"){
             getTeams();
           } else if (page == "fav-teams"){
-            
+            getSavedTeams();
           } 
         } else if (this.status == 404) {
           content.innerHTML = "<p>Halaman tidak ditemukan.</p>";
@@ -76,7 +75,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
  
   let page = window.location.hash.substr(1);
-  console.log(">>> page luar", page)
   if (page == "") page = "home";
   loadPage(page);
 });

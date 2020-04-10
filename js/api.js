@@ -19,51 +19,113 @@ const json = (response) => response.json();
 const error = (error) => console.log(`Error: ${error}`);
 
 const getTeams = () => {
+  if ("caches" in window) {
+    caches.match(baseUrl + "competitions/2021/teams").then((response) => {
+      if (response) {
+        response.json().then((data) => {
+          loadTeams(data.teams);
+        });
+      }
+    });
+  }
+
   fetch(baseUrl + "competitions/2021/teams", header)
     .then(status)
     .then(json)
     .then((data) => {
-      console.log(">>> teams", data);
       loadTeams(data.teams);
     })
-    .catch(error);
+    .catch(error)
+    .then((e) => {
+      console.log(">>> error", e);
+    });
+};
+
+const getSavedTeams = () => {
+  getAll().then((data) => {
+    if (data.length == 0) {
+      console.log("no fav");
+      loadEmptySavedTeams();
+    } else {
+      loadSavedTeams(data);
+    }
+  });
 };
 
 const getTeamById = () => {
-  console.log(">>> masuk");
-  let urlParams = new URLSearchParams(window.location.search);
-  let idParam = urlParams.get("id");
+  return new Promise((resolve, reject) => {
+    let urlParams = new URLSearchParams(window.location.search);
+    let idParam = urlParams.get("id");
 
-  fetch(baseUrl + "teams/" + idParam, header)
-    .then(status)
-    .then(json)
-    .then((data) => {
-      console.log(">>> team", data);
-      loadTeamById(data);
-    })
-    .catch(error);
+    if ("caches" in window) {
+      caches.match(baseUrl + "teams/" + idParam).then((response) => {
+        if (response) {
+          response.json().then((data) => {
+            loadTeamById(data);
+            resolve(data);
+          });
+        }
+      });
+    }
+
+    fetch(baseUrl + "teams/" + idParam, header)
+      .then(status)
+      .then(json)
+      .then((data) => {
+        loadTeamById(data);
+        resolve(data);
+      })
+      .catch(error)
+      .then((e) => {
+        console.log(">>> error", e);
+      });
+  });
 };
 
 const getTopScores = () => {
+  if ("caches" in window) {
+    caches.match(baseUrl + "competitions/2021/scorers").then((response) => {
+      if (response) {
+        response.json().then((data) => {
+          loadTopScores(data.scorers);
+        });
+      }
+    });
+  }
+
   fetch(baseUrl + "competitions/2021/scorers", header)
     .then(status)
     .then(json)
     .then((data) => {
-      console.log(">>> top scores", data);
       loadTopScores(data.scorers);
     })
-    .catch(error);
+    .catch(error)
+    .then((e) => {
+      console.log(">>> error", e);
+    });
 };
 
 const getStanding = () => {
+  if ("caches" in window) {
+    caches.match(baseUrl + "competitions/2021/standings").then((response) => {
+      if (response) {
+        response.json().then((data) => {
+          loadStanding(data.standings[0].table);
+        });
+      }
+    });
+  }
+
   fetch(baseUrl + "competitions/2021/standings", header)
     .then(status)
     .then(json)
     .then((data) => {
-      console.log(">>> standings", data);
       loadStanding(data.standings[0].table);
     })
-    .catch(error);
+    .catch(error)
+    .then((e) => {
+      console.log(">>> error", e);
+    });
 };
 
 const loadTeamById = async (data) => {
@@ -109,7 +171,7 @@ const loadTeamById = async (data) => {
   </div>
   `;
   }
-  
+
   document.querySelector(".player").innerHTML = playerHTML;
 };
 
@@ -164,6 +226,46 @@ const loadTeams = (data) => {
         </div>
         <div class="card-action right-align">
           <a href="./team-detail.html?id=${element.id}" id="see-detail" class="deep-purple-text darken-5"><strong>SEE DETAILS</strong></a>
+        </div>
+      </div>
+    </div>
+    `;
+  });
+  document.getElementById("teams-wrapper").innerHTML = articlesHTML;
+};
+
+const loadEmptySavedTeams = () => {
+  let articlesHTML = `
+    <div>
+      <h4 class="white-text">Your Favorite teams are empty</h4>
+    </div>
+  `;
+
+  document.getElementById("teams-wrapper").innerHTML = articlesHTML;
+};
+
+const loadSavedTeams = (data) => {
+  let articlesHTML = "";
+  data.forEach((element) => {
+    articlesHTML += `
+    <div class="col s12 m6 l4">
+      <div class="card">
+        <div class="card-image">
+          <img class="emblem" src="${element.crestUrl}" />
+        </div>
+        <div class="description card-content">
+          <h5 class="team-title">${element.name}</h5>
+          <div class="sub">
+            <img src="../assets/history.png" class="img-icon" />
+            <h6>${element.founded}</h6>
+          </div>
+          <div class="sub team-venue">
+            <img src="../assets/stadium.png" class="img-icon" />
+            <h6>${element.venue}</h6>
+          </div>
+        </div>
+        <div class="card-action right-align">
+          <a href="./team-detail.html?id=${element.id}&saved=true" id="see-detail" class="deep-purple-text darken-5"><strong>SEE DETAILS</strong></a>
         </div>
       </div>
     </div>
