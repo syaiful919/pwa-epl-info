@@ -1,0 +1,21 @@
+{
+    "name": "Premier League Info",
+    "short_name": "EPL Info",
+    "description": "Dicoding PWA Submission",
+    "theme_color": "#dc143c",
+    "background_color": "#dc143c",
+    "display": "standalone",
+    "start_url": "/index.html",
+    "icons": [
+        {
+            "src": "assets/icon192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icon512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+  }
