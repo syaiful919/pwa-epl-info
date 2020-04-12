@@ -239,7 +239,7 @@ const loadTeams = (data) => {
 const loadEmptySavedTeams = () => {
   let articlesHTML = `
     <div>
-      <h4 class="white-text">Your Favorite teams are empty</h4>
+      <h4 class="white-text">Your Favorite teams is empty</h4>
     </div>
   `;
 
