@@ -44,3 +44,20 @@ const getAll = () => {
       });
   });
 };
+
+const getById = (id) => {
+  return new Promise((resolve, reject) => {
+    dbPromised
+      .then((db) => {
+        let tx = db.transaction("teams", "readonly");
+        let store = tx.objectStore("teams");
+        return store.get(id)
+      })
+      .then((team) => {
+        resolve(team);
+      })
+      .catch((e)=>{
+        reject(e)
+      })
+  });
+};
