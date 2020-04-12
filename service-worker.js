@@ -1,93 +1,66 @@
-const CACHE_NAME = "firstpwa-v1";
-var urlsToCache = [
-  "/",
-  "/manifest.json",
-  "/nav.html",
-  "/index.html",
-  "/team-detail.html",
-  "/pages/fav-teams.html",
-  "/pages/home.html",
-  "/pages/tables.html",
-  "/pages/teams.html",
-  "/pages/top-scores.html",
-  "/css/style.css",
-  "/css/materialize.min.css",
-  "/js/materialize.min.js",
-  "/js/index.js",
-  "/js/api.js",
-  "/js/db.js",
-  "/js/sw-registration.js",
-  "/js/team-detail.js",
-  "/js/notification.js",
-  "/lib/idb.js",
-  "/assets/1.jpg",
-  "/assets/2.jpg",
-  "/assets/3.jpg",
-  "/assets/4.jpg",
-  "/assets/5.jpg",
-  "/assets/back.svg",
-  "/assets/burger.svg",
-  "/assets/epl.svg",
-  "/assets/fav.svg",
-  "/assets/fav-outline.svg",
-  "/assets/coach.png",
-  "/assets/flag.png",
-  "/assets/goal.png",
-  "/assets/history.png",
-  "/assets/shield.png",
-  "/assets/stadium.png",
-  "/assets/tshirt.png",
-  "/assets/icon192x192.png",
-  "/assets/icon512x512.png",
-];
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js');
+ 
+if (workbox)
+  console.log(`Workbox successfully loaded`);
+else
+  console.log(`Workbox failed do load`);
 
-self.addEventListener("install", function (event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function (cache) {
-      return cache.addAll(urlsToCache);
+workbox.precaching.precacheAndRoute([
+  {url: "/manifest.json", revision: "1"},
+  {url: "/nav.html", revision: "1"},
+  {url: "/index.html", revision: "1"},
+  {url: "/team-detail.html", revision: "1"},
+  {url: "/css/style.css", revision: "1"},
+  {url: "/css/materialize.min.css", revision: "1"},
+  {url: "/js/materialize.min.js", revision: "1"},
+  {url: "/js/index.js", revision: "1"},
+  {url: "/js/api.js", revision: "1"},
+  {url: "/js/db.js", revision: "1"},
+  {url: "/js/sw-registration.js", revision: "1"},
+  {url: "/js/team-detail.js", revision: "1"},
+  {url: "/js/notification.js", revision: "1"},
+  {url: "/lib/idb.js", revision: "1"},
+  {url: "/assets/1.jpg", revision: "1"},
+  {url: "/assets/2.jpg", revision: "1"},
+  {url: "/assets/3.jpg", revision: "1"},
+  {url: "/assets/4.jpg", revision: "1"},
+  {url: "/assets/5.jpg", revision: "1"},
+  {url: "/assets/back.svg", revision: "1"},
+  {url: "/assets/burger.svg", revision: "1"},
+  {url: "/assets/epl.svg", revision: "1"},
+  {url: "/assets/fav.svg", revision: "1"},
+  {url: "/assets/fav-outline.svg", revision: "1"},
+  {url: "/assets/coach.png", revision: "1"},
+  {url: "/assets/flag.png", revision: "1"},
+  {url: "/assets/goal.png", revision: "1"},
+  {url: "/assets/history.png", revision: "1"},
+  {url: "/assets/shield.png", revision: "1"},
+  {url: "/assets/stadium.png", revision: "1"},
+  {url: "/assets/tshirt.png", revision: "1"},
+  {url: "/assets/icon192x192.png", revision: "1"},
+  {url: "/assets/icon512x512.png", revision: "1"},
+])
+
+workbox.routing.registerRoute(
+  new RegExp('/pages/'),
+    workbox.strategies.staleWhileRevalidate({
+        cacheName: 'pages'
     })
-  );
-});
+);
 
-self.addEventListener("fetch", function (event) {
-  const baseUrl = "https://api.football-data.org/v2/";
-  const header = {
-    headers: {
-      "X-Auth-Token": "b40c7816650a44638b508fc392f5dac6",
-    },
-  };
-
-  if (event.request.url.indexOf(baseUrl) > -1) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return fetch(event.request).then(function(response) {
-          cache.put(event.request.url, response.clone());
-          return response;
-        })
-      })
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request, { ignoreSearch: true }).then(function(response) {
-        return response || fetch (event.request);
-      })
-    )
-  }
-});
-
-self.addEventListener("activate", function (event) {
-  event.waitUntil(
-    caches.keys().then(function (cacheNames) {
-      return Promise.all(
-        cacheNames.map(function (cacheName) {
-          if (cacheName != CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
+workbox.routing.registerRoute(
+  new RegExp('/team-detail.html?'),
+    workbox.strategies.staleWhileRevalidate({
+        cacheName: 'team-detail'
     })
-  );
-});
+);
+
+workbox.routing.registerRoute(
+  new RegExp('https://api.football-data.org/v2/'),
+  workbox.strategies.staleWhileRevalidate({
+      cacheName: 'remote'
+  })
+);
 
 self.addEventListener("notificationclick", function (event) {
   event.notification.close();
