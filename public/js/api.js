@@ -24,6 +24,7 @@ const getTeams = () => {
       if (response) {
         response.json().then((data) => {
           loadTeams(data.teams);
+          hidePreLoader();
         });
       }
     });
@@ -34,10 +35,12 @@ const getTeams = () => {
     .then(json)
     .then((data) => {
       loadTeams(data.teams);
+      hidePreLoader();
     })
     .catch(error)
     .then((e) => {
       console.log(">>> error", e);
+      hidePreLoader();
     });
 };
 
@@ -46,8 +49,10 @@ const getSavedTeams = () => {
     if (data.length == 0) {
       console.log("no fav");
       loadEmptySavedTeams();
+      hidePreLoader();
     } else {
       loadSavedTeams(data);
+      hidePreLoader();
     }
   });
 };
@@ -62,6 +67,7 @@ const getTeamById = () => {
         if (response) {
           response.json().then((data) => {
             loadTeamById(data);
+            hidePreLoader();
             resolve(data);
           });
         }
@@ -73,11 +79,13 @@ const getTeamById = () => {
       .then(json)
       .then((data) => {
         loadTeamById(data);
+        hidePreLoader();
         resolve(data);
       })
       .catch(error)
       .then((e) => {
         console.log(">>> error", e);
+        hidePreLoader();
       });
   });
 };
@@ -88,6 +96,7 @@ const getTopScores = () => {
       if (response) {
         response.json().then((data) => {
           loadTopScores(data.scorers);
+          hidePreLoader();
         });
       }
     });
@@ -98,10 +107,12 @@ const getTopScores = () => {
     .then(json)
     .then((data) => {
       loadTopScores(data.scorers);
+      hidePreLoader();
     })
     .catch(error)
     .then((e) => {
       console.log(">>> error", e);
+      hidePreLoader();
     });
 };
 
@@ -111,6 +122,7 @@ const getStanding = () => {
       if (response) {
         response.json().then((data) => {
           loadStanding(data.standings[0].table);
+          hidePreLoader();
         });
       }
     });
@@ -121,12 +133,21 @@ const getStanding = () => {
     .then(json)
     .then((data) => {
       loadStanding(data.standings[0].table);
+      hidePreLoader();
     })
     .catch(error)
     .then((e) => {
       console.log(">>> error", e);
+      hidePreLoader();
     });
 };
+
+const hidePreLoader = () =>{
+  let preLoader = document.querySelector(".progress");
+  if(preLoader){
+    preLoader.style.display = "none"
+  }
+}
 
 const loadTeamById = async (data) => {
   let squad = await data.squad;
@@ -202,7 +223,7 @@ const loadTopScores = (data) => {
     pos++;
   });
   document.getElementById("top-scorers-wrapper").innerHTML = articlesHTML;
-  document.querySelector(".progress").style.display = "none"
+  
 };
 
 const loadTeams = (data) => {
@@ -233,7 +254,7 @@ const loadTeams = (data) => {
     `;
   });
   document.getElementById("teams-wrapper").innerHTML = articlesHTML;
-  document.querySelector(".progress").style.display = "none"
+  
 };
 
 const loadEmptySavedTeams = () => {
@@ -244,7 +265,7 @@ const loadEmptySavedTeams = () => {
   `;
 
   document.getElementById("teams-wrapper").innerHTML = articlesHTML;
-  document.querySelector(".progress").style.display = "none"
+  
 };
 
 const loadSavedTeams = (data) => {
@@ -275,7 +296,7 @@ const loadSavedTeams = (data) => {
     `;
   });
   document.getElementById("teams-wrapper").innerHTML = articlesHTML;
-  document.querySelector(".progress").style.display = "none"
+  
 };
 
 const loadStanding = (data) => {
@@ -327,5 +348,5 @@ const loadStanding = (data) => {
   });
   document.getElementById("tables-wrapper").setAttribute("class", "collection");
   document.getElementById("tables-wrapper").innerHTML = articlesHTML;
-  document.querySelector(".progress").style.display = "none"
+  
 };

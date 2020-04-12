@@ -14,11 +14,11 @@ workbox.precaching.precacheAndRoute([
   {url: "/css/materialize.min.css", revision: "1"},
   {url: "/js/materialize.min.js", revision: "1"},
   {url: "/js/index.js", revision: "1"},
-  {url: "/js/api.js", revision: "1"},
+  {url: "/js/api.js", revision: "2"},
   {url: "/js/db.js", revision: "1"},
   {url: "/js/sw-registration.js", revision: "1"},
   {url: "/js/team-detail.js", revision: "1"},
-  {url: "/js/notification.js", revision: "1"},
+  {url: "/js/notification.js", revision: "2"},
   {url: "/lib/idb.js", revision: "1"},
   {url: "/assets/1.jpg", revision: "1"},
   {url: "/assets/2.jpg", revision: "1"},
@@ -39,7 +39,9 @@ workbox.precaching.precacheAndRoute([
   {url: "/assets/tshirt.png", revision: "1"},
   {url: "/assets/icon192x192.png", revision: "1"},
   {url: "/assets/icon512x512.png", revision: "1"},
-])
+],{
+  ignoreUrlParametersMatching: [/.*/]
+})
 
 workbox.routing.registerRoute(
   new RegExp('/pages/'),

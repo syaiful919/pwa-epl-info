@@ -23,40 +23,42 @@ requestPermission = () => {
 
       if ("PushManager" in window) {
         navigator.serviceWorker.getRegistration().then(function (registration) {
-          registration.pushManager
-            .subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: urlBase64ToUint8Array(
-                "BILn754vPEi7PKCOT4CwZ4VaQ1hGByrdLZFpPbX1B2iEbsnpjnAvAOrsKHvcBc2hGeWl2P78B0oNWg1GhtlroEk"
-              ),
-            })
-            .then(function (subscribe) {
-              console.log(
-                "subscribe succesfull, endpoint: ",
-                subscribe.endpoint
-              );
-              console.log(
-                "subscribe succesfull, p256dh key: ",
-                btoa(
-                  String.fromCharCode.apply(
-                    null,
-                    new Uint8Array(subscribe.getKey("p256dh"))
+          if (registration != undefined) {
+            registration.pushManager
+              .subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(
+                  "BILn754vPEi7PKCOT4CwZ4VaQ1hGByrdLZFpPbX1B2iEbsnpjnAvAOrsKHvcBc2hGeWl2P78B0oNWg1GhtlroEk"
+                ),
+              })
+              .then(function (subscribe) {
+                console.log(
+                  "subscribe succesfull, endpoint: ",
+                  subscribe.endpoint
+                );
+                console.log(
+                  "subscribe succesfull, p256dh key: ",
+                  btoa(
+                    String.fromCharCode.apply(
+                      null,
+                      new Uint8Array(subscribe.getKey("p256dh"))
+                    )
                   )
-                )
-              );
-              console.log(
-                "subscribe succesfull, auth key: ",
-                btoa(
-                  String.fromCharCode.apply(
-                    null,
-                    new Uint8Array(subscribe.getKey("auth"))
+                );
+                console.log(
+                  "subscribe succesfull, auth key: ",
+                  btoa(
+                    String.fromCharCode.apply(
+                      null,
+                      new Uint8Array(subscribe.getKey("auth"))
+                    )
                   )
-                )
-              );
-            })
-            .catch(function (e) {
-              console.error("cannot do subscribe ", e.message);
-            });
+                );
+              })
+              .catch(function (e) {
+                console.error("cannot do subscribe ", e.message);
+              });
+          }
         });
       }
     });
