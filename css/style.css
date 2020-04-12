@@ -418,3 +418,8 @@ body {
   height: 40px;
   overflow: hidden;
 }
+
+.progress{
+  margin: 0 auto;
+  width: 50%;
+}

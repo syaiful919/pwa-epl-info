@@ -202,6 +202,7 @@ const loadTopScores = (data) => {
     pos++;
   });
   document.getElementById("top-scorers-wrapper").innerHTML = articlesHTML;
+  document.querySelector(".progress").style.display = "none"
 };
 
 const loadTeams = (data) => {
@@ -232,6 +233,7 @@ const loadTeams = (data) => {
     `;
   });
   document.getElementById("teams-wrapper").innerHTML = articlesHTML;
+  document.querySelector(".progress").style.display = "none"
 };
 
 const loadEmptySavedTeams = () => {
@@ -242,6 +244,7 @@ const loadEmptySavedTeams = () => {
   `;
 
   document.getElementById("teams-wrapper").innerHTML = articlesHTML;
+  document.querySelector(".progress").style.display = "none"
 };
 
 const loadSavedTeams = (data) => {
@@ -272,6 +275,7 @@ const loadSavedTeams = (data) => {
     `;
   });
   document.getElementById("teams-wrapper").innerHTML = articlesHTML;
+  document.querySelector(".progress").style.display = "none"
 };
 
 const loadStanding = (data) => {
@@ -323,4 +327,5 @@ const loadStanding = (data) => {
   });
   document.getElementById("tables-wrapper").setAttribute("class", "collection");
   document.getElementById("tables-wrapper").innerHTML = articlesHTML;
+  document.querySelector(".progress").style.display = "none"
 };
